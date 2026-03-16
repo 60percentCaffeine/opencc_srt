@@ -1,0 +1,22 @@
+[project]
+name = "opencc-srt"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+requires-python = ">=3.11"
+dependencies = [
+    "opencc-python-reimplemented (>=0.1.7,<0.2.0)"
+]
+
+
+[project.scripts]
+srtchconv = "srtchconv:main"
+
+[tool.poetry]
+packages = [{include = "srtchconv.py"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
