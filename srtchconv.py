@@ -32,17 +32,25 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Convert SRT subtitles between Chinese variants")
     parser.add_argument("input", type=Path, help="Input SRT file")
     parser.add_argument("-o", "--output", type=Path, help="Output SRT file (default: input_<config>.srt)")
+    parser.add_argument("-i", "--in-place", action="store_true", help="Overwrite the input file with the converted result")
     parser.add_argument(
         "-c", "--config", default="t2s", choices=sorted(CONFIGS),
         help="OpenCC conversion config (default: t2s)",
     )
     args = parser.parse_args()
 
+    if args.in_place and args.output:
+        print("Error: --in-place and --output are mutually exclusive", file=sys.stderr)
+        sys.exit(1)
+
     if not args.input.exists():
         print(f"Error: {args.input} not found", file=sys.stderr)
         sys.exit(1)
 
-    output = args.output or args.input.with_stem(f"{args.input.stem}_{args.config}")
+    if args.in_place:
+        output = args.input
+    else:
+        output = args.output or args.input.with_stem(f"{args.input.stem}_{args.config}")
     convert_srt(args.input, output, CONFIGS[args.config])
     print(f"Converted {args.input} -> {output} ({args.config})")
 
